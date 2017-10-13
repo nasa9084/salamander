@@ -4,14 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/nasa9084/salamander/salamander/log"
 )
 
 // Server represents a instance of Salamander server
 type Server struct {
 	*mux.Router
-	listen       string
-	loggingLevel log.Level
+	listen string
 }
 
 // NewServer returns a new Salamander server
