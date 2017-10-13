@@ -16,6 +16,7 @@ type Server struct {
 func NewServer(opts ...option) *Server {
 	s := Server{
 		Router: mux.NewRouter(),
+		listen: ":8080",
 	}
 	for _, opt := range opts {
 		opt(&s)
