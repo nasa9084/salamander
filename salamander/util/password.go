@@ -3,12 +3,12 @@ package util
 import (
 	"crypto/sha512"
 	"encoding/hex"
-	"strconv"
+	"fmt"
 )
 
 const (
 	stretchN = 30
-	hashAlg = "sha512"
+	hashAlg  = "sha512"
 )
 
 // Password hashes raw password string with salt(id)
@@ -17,7 +17,7 @@ func Password(password, id string) string {
 	for i := 0; i < stretchN; i++ {
 		hashed = sha512HexDigest(hashed + id)
 	}
-	return "$" + id + "$" + hashAlg + "$" + strconv.Itoa(stretchN) + "$" + hashed
+	return fmt.Sprintf("$%s$%s$%d$%s", id, hashAlg, stretchN, hashed)
 }
 
 func sha512HexDigest(raw string) string {
