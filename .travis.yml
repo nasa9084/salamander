@@ -14,7 +14,8 @@ addons:
 
 script:
   - go vet
-  - go test $(glide nv) -v -race -coverprofile=coverage.txt -covermode=atomic
+  - go test -v $(glide nv)
+  - go test -v -race -coverprofile=coverage.txt -covermode=atomic
 
 after_success:
   - bach <(curl -s https://codecov.io/bash)
