@@ -46,23 +46,28 @@ func TestServiceAdminLookup(t *testing.T) {
 	candidates := []struct {
 		ID       string
 		Password string
+		ExpectedErr error
 	}{
-		{"something", "hogehoge"},
+		{"", "password", model.ErrNilID},
+		{"something", "hogehoge", nil},
 	}
 
 	tx := transaction(t)
 	for _, c := range candidates {
 		sqlmock.ExpectedRows(
 			sqlmock.Columns([]string{"id", "password"}),
-			sqlmock.AddValues([]driver.Value{c.ID, c.Password}),
+			sqlmock.ValuesList([]driver.Value{c.ID, c.Password}),
 		)
 
 		sa := model.ServiceAdmin{
 			ID: c.ID,
 		}
-		if err := sa.Lookup(tx); err != nil {
-			t.Errorf("%s", err)
+		if err := sa.Lookup(tx); errors.Cause(err) != c.ExpectedErr {
+			t.Errorf(`"%s" != "%s"`, errors.Cause(err), c.ExpectedErr)
 			return
+		}
+		if c.ExpectedErr != nil {
+			continue
 		}
 		if sa.ID != c.ID {
 			t.Errorf(`"%s" != "%s"`, sa.ID, c.ID)
@@ -111,11 +116,15 @@ func TestServiceAdminDelete(t *testing.T) {
 	}
 	tx := transaction(t)
 	for _, c := range candidates {
+		sqlmock.ExpectedResult(
+			sqlmock.RowsAffected(1),
+		)
+
 		sa := model.ServiceAdmin{
 			ID: c.ID,
 		}
 		if err := sa.Delete(tx); errors.Cause(err) != c.ExpectedErr {
-			t.Errorf(`"%s" != "%s"`, err, c.ExpectedErr)
+			t.Errorf(`"%s" != "%s"`, errors.Cause(err), c.ExpectedErr)
 			return
 		}
 	}

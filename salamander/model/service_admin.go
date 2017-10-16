@@ -11,6 +11,7 @@ import (
 const (
 	serviceAdminCreateSQL = `INSERT INTO service_admin(id, password) VALUES(?, ?)`
 	serviceAdminLookupSQL = `SELECT * FROM service_admin WHERE id=?`
+	serviceAdminUpdateSQL = `UPDATE service_admin SET(id=?, password=?) WHERE id=?`
 	serviceAdminDeleteSQL = `DELETE FROM service_admin WHERE id=?`
 )
 
@@ -93,9 +94,16 @@ func (sa *ServiceAdmin) Delete(tx *sql.Tx) error {
 		return errors.Wrap(ErrNilID, `Deleting ServiceAdmin`)
 	}
 
-	_, err := tx.Exec(serviceAdminDeleteSQL, sa.ID)
+	r, err := tx.Exec(serviceAdminDeleteSQL, sa.ID)
 	if err != nil {
 		return errors.Wrap(err, serviceAdminDeleteSQL)
+	}
+	rowsAffected, err := r.RowsAffected()
+	if err != nil {
+		return errors.Wrap(err, `checking rows affected`)
+	}
+	if rowsAffected == 0 {
+		return ErrNoRowsAffected
 	}
 	return nil
 }
