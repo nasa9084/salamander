@@ -76,14 +76,7 @@ func (sa *ServiceAdmin) Update(tx *sql.Tx) error {
 	if err != nil {
 		return errors.Wrap(err, serviceAdminUpdateSQL)
 	}
-	rowsAffected, err := r.RowsAffected()
-	if err != nil {
-		return errors.Wrap(err, `checking rows affected`)
-	}
-	if rowsAffected == 0 {
-		return ErrNoRowsAffected
-	}
-	return nil
+	return checkResult(r)
 }
 
 // Delete ServiceAdmin
@@ -98,12 +91,5 @@ func (sa *ServiceAdmin) Delete(tx *sql.Tx) error {
 	if err != nil {
 		return errors.Wrap(err, serviceAdminDeleteSQL)
 	}
-	rowsAffected, err := r.RowsAffected()
-	if err != nil {
-		return errors.Wrap(err, `checking rows affected`)
-	}
-	if rowsAffected == 0 {
-		return ErrNoRowsAffected
-	}
-	return nil
+	return checkResult(r)
 }
