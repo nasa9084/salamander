@@ -1,5 +1,5 @@
 hash: c6880d3284784bc581312cc903984db509e5079dbc82c8bcf643c94f3ec5dbf1
-updated: 2017-10-16T13:18:42.826237904+09:00
+updated: 2017-10-16T13:52:22.972626792+09:00
 imports:
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
@@ -11,4 +11,4 @@ imports:
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 testImports:
 - name: github.com/nasa9084/go-sql-mock
-  version: d130d4c4eef924ae268d253bbed560053c7386f1
+  version: ae80bf733899ec08a09d905e014ab403f6e4e270
