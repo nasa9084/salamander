@@ -75,6 +75,32 @@ func TestServiceAdminLookup(t *testing.T) {
 	}
 }
 
+func TestServiceAdminUpdate(t *testing.T) {
+	candidates := []struct {
+		ID string
+		Password string
+		ExpectedErr error
+	}{
+		{"something", "password", nil},
+		{"", "password", model.ErrNilID},
+		{"something", "", model.ErrNilPasswd},
+	}
+	tx := transaction(t)
+	for _, c:= range candidates {
+		sqlmock.ExpectedResult(
+			sqlmock.RowsAffected(1),
+		)
+		sa := model.ServiceAdmin{
+			ID: c.ID,
+			Password: c.Password,
+		}
+		if err := sa.Update(tx); errors.Cause(err) != c.ExpectedErr {
+			t.Errorf(`"%s" != "%s"`, errors.Cause(err), c.ExpectedErr)
+			return
+		}
+	}
+}
+
 func TestServiceAdminDelete(t *testing.T) {
 	candidates := []struct {
 		ID string

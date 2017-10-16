@@ -59,6 +59,32 @@ func (sa *ServiceAdmin) Lookup(tx *sql.Tx) error {
 	return nil
 }
 
+// Update ServiceAdmin information
+func (sa *ServiceAdmin) Update(tx *sql.Tx) error {
+	log.Printf("model.ServiceAdmin.Update")
+
+	errmsg := `Updating ServiceAdmin`
+	switch {
+	case sa.ID == "":
+		return errors.Wrap(ErrNilID, errmsg)
+	case sa.Password == "":
+		return errors.Wrap(ErrNilPasswd, errmsg)
+	}
+
+	r, err := tx.Exec(serviceAdminUpdateSQL, sa.ID, util.Password(sa.Password, sa.ID), sa.ID)
+	if err != nil {
+		return errors.Wrap(err, serviceAdminUpdateSQL)
+	}
+	rowsAffected, err := r.RowsAffected()
+	if err != nil {
+		return errors.Wrap(err, `checking rows affected`)
+	}
+	if rowsAffected == 0 {
+		return ErrNoRowsAffected
+	}
+	return nil
+}
+
 // Delete ServiceAdmin
 func (sa *ServiceAdmin) Delete(tx *sql.Tx) error {
 	log.Printf("model.ServiceAdmin.Delete")
