@@ -20,7 +20,7 @@ func exec() int {
 		log.Printf("%s", err)
 		return 1
 	}
-	s := salamander.NewServer(salamander.Listen(opts.Listen))
+	s := salamander.NewServer(salamander.ListenAddr(opts.Listen))
 	log.Printf("server listening: %s", opts.Listen)
 	if err := s.Run(); err != nil {
 		log.Printf("%s", err)
