@@ -13,6 +13,7 @@ addons:
       - glide
 
 before_script:
+  - cd salamander
   - glide install
 
 script:
