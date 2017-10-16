@@ -12,8 +12,10 @@ addons:
     packages:
       - glide
 
-before_script:
-  - cd salamander
+before_install:
+  - cd salamaneder
+
+install:
   - glide install
 
 script:
