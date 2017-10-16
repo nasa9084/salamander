@@ -11,6 +11,7 @@ import (
 const (
 	serviceAdminCreateSQL = `INSERT INTO service_admin(id, password) VALUES(?, ?)`
 	serviceAdminLookupSQL = `SELECT * FROM service_admin WHERE id=?`
+	serviceAdminDeleteSQL = `DELETE FROM service_admin WHERE id=?`
 )
 
 // ServiceAdmin is a user has authority of System Administrator
@@ -54,6 +55,21 @@ func (sa *ServiceAdmin) Lookup(tx *sql.Tx) error {
 	row := tx.QueryRow(serviceAdminLookupSQL, sa.ID)
 	if err := sa.Scan(row); err != nil {
 		return errors.Wrap(err, `Scanning ServiceAdmin`)
+	}
+	return nil
+}
+
+// Delete ServiceAdmin
+func (sa *ServiceAdmin) Delete(tx *sql.Tx) error {
+	log.Printf("model.ServiceAdmin.Delete")
+
+	if sa.ID == "" {
+		return errors.Wrap(ErrNilID, `Deleting ServiceAdmin`)
+	}
+
+	_, err := tx.Exec(serviceAdminDeleteSQL, sa.ID)
+	if err != nil {
+		return errors.Wrap(err, serviceAdminDeleteSQL)
 	}
 	return nil
 }

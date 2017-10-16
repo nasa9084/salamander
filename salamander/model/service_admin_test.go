@@ -74,3 +74,23 @@ func TestServiceAdminLookup(t *testing.T) {
 		}
 	}
 }
+
+func TestServiceAdminDelete(t *testing.T) {
+	candidates := []struct {
+		ID string
+		ExpectedErr error
+	}{
+		{"something", nil},
+		{"", model.ErrNilID},
+	}
+	tx := transaction(t)
+	for _, c := range candidates {
+		sa := model.ServiceAdmin{
+			ID: c.ID,
+		}
+		if err := sa.Delete(tx); errors.Cause(err) != c.ExpectedErr {
+			t.Errorf(`"%s" != "%s"`, err, c.ExpectedErr)
+			return
+		}
+	}
+}
