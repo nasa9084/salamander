@@ -16,15 +16,13 @@ type Server struct {
 	listen string
 }
 
-
 // ServerOption is a functional Option Pattern's option function
 type ServerOption func(*Server)
 
 // ListenAddr configure Server listening address
 func ListenAddr(l string) ServerOption {
-	return func(s *Server)  {
+	return func(s *Server) {
 		s.listen = l
-		return nil
 	}
 }
 
