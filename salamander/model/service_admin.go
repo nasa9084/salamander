@@ -2,8 +2,8 @@ package model
 
 import (
 	"database/sql"
-	"log"
 
+	"github.com/nasa9084/salamander/salamander/log"
 	"github.com/nasa9084/salamander/salamander/util"
 	"github.com/pkg/errors"
 )
@@ -28,7 +28,7 @@ func (sa *ServiceAdmin) Scan(sc scanner) error {
 
 // Create ServiceAdmin
 func (sa *ServiceAdmin) Create(tx *sql.Tx) error {
-	log.Printf("model.ServiceAdmin.Create")
+	log.Info.Printf("model.ServiceAdmin.Create")
 
 	errmsg := `Creating ServiceAdmin`
 	switch {
@@ -47,7 +47,7 @@ func (sa *ServiceAdmin) Create(tx *sql.Tx) error {
 
 // Lookup ServiceAdmin by ID
 func (sa *ServiceAdmin) Lookup(tx *sql.Tx) error {
-	log.Printf("model.ServiceAdmin.Lookup")
+	log.Info.Printf("model.ServiceAdmin.Lookup")
 
 	if sa.ID == "" {
 		return errors.Wrap(ErrNilID, `Looking up ServiceAdmin`)
@@ -62,7 +62,7 @@ func (sa *ServiceAdmin) Lookup(tx *sql.Tx) error {
 
 // Update ServiceAdmin information
 func (sa *ServiceAdmin) Update(tx *sql.Tx) error {
-	log.Printf("model.ServiceAdmin.Update")
+	log.Info.Printf("model.ServiceAdmin.Update")
 
 	errmsg := `Updating ServiceAdmin`
 	switch {
@@ -81,7 +81,7 @@ func (sa *ServiceAdmin) Update(tx *sql.Tx) error {
 
 // Delete ServiceAdmin
 func (sa *ServiceAdmin) Delete(tx *sql.Tx) error {
-	log.Printf("model.ServiceAdmin.Delete")
+	log.Info.Printf("model.ServiceAdmin.Delete")
 
 	if sa.ID == "" {
 		return errors.Wrap(ErrNilID, `Deleting ServiceAdmin`)
