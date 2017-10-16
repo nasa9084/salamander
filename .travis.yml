@@ -1,0 +1,20 @@
+language: go
+
+go:
+  - 1.7.x
+  - 1.8.x
+  - 1.9.x
+
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:masterminds/glide'
+    packages:
+      - glide
+
+script:
+  - go vet
+  - go test $(glide nv) -v -race -coverprofile=coverage.txt -covermode=atomic
+
+after_success:
+  - bach <(curl -s https://codecov.io/bash)
