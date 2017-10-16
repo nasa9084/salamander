@@ -6,14 +6,30 @@ import (
 	"github.com/gorilla/mux"
 )
 
+const (
+	defaultListenAddr = ":8080"
+)
+
 // Server represents a instance of Salamander server
 type Server struct {
 	*mux.Router
 	listen string
 }
 
+
+// ServerOption is a functional Option Pattern's option function
+type ServerOption func(*Server)
+
+// ListenAddr configure Server listening address
+func ListenAddr(l string) ServerOption {
+	return func(s *Server)  {
+		s.listen = l
+		return nil
+	}
+}
+
 // NewServer returns a new Salamander server
-func NewServer(opts ...option) *Server {
+func NewServer(opts ...ServerOption) *Server {
 	s := Server{
 		Router: mux.NewRouter(),
 		listen: ":8080",
