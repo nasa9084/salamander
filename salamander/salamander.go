@@ -44,6 +44,7 @@ func (s *Server) Run() error {
 	return http.ListenAndServe(s.listen, s.Router)
 }
 
+// binding url path to http handler
 func (s *Server) bindRoutes() {
 	r := s.Router
 
