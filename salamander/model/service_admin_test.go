@@ -1,7 +1,6 @@
 package model_test
 
 import (
-	"database/sql"
 	"database/sql/driver"
 	"testing"
 
@@ -9,14 +8,6 @@ import (
 	"github.com/nasa9084/salamander/salamander/model"
 	"github.com/pkg/errors"
 )
-
-func transaction(t *testing.T) *sql.Tx {
-	tx, err := mockDB.Begin()
-	if err != nil {
-		t.Fatalf("%s", err)
-	}
-	return tx
-}
 
 func TestServiceAdminCreate(t *testing.T) {
 	candidates := []struct {

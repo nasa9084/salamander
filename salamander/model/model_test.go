@@ -19,3 +19,11 @@ func TestMain(m *testing.M) {
 	mockDB.Close()
 	os.Exit(code)
 }
+
+func transaction(t *testing.T) *sql.Tx {
+	tx, err := mockDB.Begin()
+	if err != nil {
+		t.Fatalf("%s", err)
+	}
+	return tx
+}
