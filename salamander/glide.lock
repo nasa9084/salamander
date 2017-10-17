@@ -1,14 +1,14 @@
 hash: c6880d3284784bc581312cc903984db509e5079dbc82c8bcf643c94f3ec5dbf1
-updated: 2017-10-16T13:52:22.972626792+09:00
+updated: 2017-10-17T21:35:08.441988956+09:00
 imports:
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
-  version: bcd8bc72b08df0f70df986b97f95590779502d31
+  version: 9bd9ff2d1d2a0660d35050674f2c3112547997af
 - name: github.com/jessevdk/go-flags
   version: 96dc06278ce32a0e9d957d590bb987c81ee66407
 - name: github.com/pkg/errors
-  version: 645ef00459ed84a119197bfb8d8205042c6df63d
+  version: 2b3a18b5f0fb6b4f9190549597d3f962c02bc5eb
 testImports:
 - name: github.com/nasa9084/go-sql-mock
-  version: ae80bf733899ec08a09d905e014ab403f6e4e270
+  version: 982ea1325821fe381ea747efa4bf16dd5e57b6a9
