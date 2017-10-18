@@ -1,6 +1,5 @@
 # build container
 FROM golang:1.9 AS build
-MAINTAINER nasa9084
 
 ENV GHQ_ROOT=/go/src
 ENV CGO_ENABLED=0
@@ -17,5 +16,7 @@ RUN glide install && \
 
 # application container
 FROM busybox
+LABEL maintainer="nasa9084"
+
 COPY --from=build /tmp/salamander /usr/local/bin/salamander
 CMD ["/usr/local/bin/salamander"]
