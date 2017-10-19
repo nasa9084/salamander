@@ -17,6 +17,5 @@ RUN glide install && \
 # application container
 FROM busybox
 LABEL maintainer="nasa9084"
-
-COPY --from=build /tmp/salamander /usr/local/bin/salamander
-CMD ["/usr/local/bin/salamander"]
+COPY --from=build /tmp/salamander salamander
+CMD ["salamander"]
