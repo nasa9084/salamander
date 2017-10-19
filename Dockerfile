@@ -12,7 +12,8 @@ RUN curl https://glide.sh/get | sh
 
 WORKDIR /go/src/github.com/nasa9084/salamander/salamander
 RUN glide install && \
-    go build -o /tmp/salamander cmd/salamander/main.go
+    go build -o /tmp/salamander cmd/salamander/main.go && \
+    chmod +x /tmp/salamander
 
 # application container
 FROM busybox
