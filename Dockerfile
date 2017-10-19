@@ -19,4 +19,4 @@ RUN glide install && \
 FROM alpine:latest
 LABEL maintainer="nasa9084"
 COPY --from=build /tmp/salamander salamander
-CMD ["salamander"]
+CMD ["./salamander"]
