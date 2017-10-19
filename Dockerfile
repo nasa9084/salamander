@@ -16,7 +16,7 @@ RUN glide install && \
     chmod +x /tmp/salamander
 
 # application container
-FROM busybox
+FROM alpine:latest
 LABEL maintainer="nasa9084"
 COPY --from=build /tmp/salamander salamander
 CMD ["salamander"]
