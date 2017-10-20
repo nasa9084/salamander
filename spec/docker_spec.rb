@@ -13,4 +13,8 @@ describe "Docker" do
   describe port "8080" do
     it { should be_listening }
   end
+
+  describe command "wget -O- -q http://localhost:8080/" do
+    its(:stdout) { should match (/hello/) }
+  end
 end
