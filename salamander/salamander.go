@@ -57,7 +57,7 @@ func Database(db *sql.DB) ServerOption {
 func NewServer(opts ...ServerOption) Server {
 	s := server{
 		Router: mux.NewRouter(),
-		listen: ":8080",
+		listen: defaultListenAddr,
 	}
 	s.bindRoutes()
 	for _, opt := range opts {
