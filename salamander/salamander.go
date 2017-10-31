@@ -31,6 +31,11 @@ type server struct {
 	db     *sql.DB
 }
 
+// Server represents a instance of Salamander server
+type Server interface{
+	Run() error
+}
+
 // ServerOption is a functional Option Pattern's option function
 type ServerOption func(*server)
 
@@ -49,7 +54,7 @@ func Database(db *sql.DB) ServerOption {
 }
 
 // NewServer returns a new Salamander server
-func NewServer(opts ...ServerOption) *server {
+func NewServer(opts ...ServerOption) Server {
 	s := server{
 		Router: mux.NewRouter(),
 		listen: ":8080",
