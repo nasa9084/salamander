@@ -13,26 +13,17 @@ import (
 
 func userTestCase(drop string) *model.User {
 	u := &model.User{
-		ID:             "hoge",
-		Password:       "hoge",
-		FirstName:      "hoge",
-		FirstNameKana:  "hoge",
-		FamilyName:     "hoge",
-		FamilyNameKana: "hoge",
+		ID:          "hoge",
+		Password:    "hoge",
+		DisplayName: "hoge",
 	}
 	switch drop {
 	case "id":
 		u.ID = ""
 	case "password":
 		u.Password = ""
-	case "first_name":
-		u.FirstName = ""
-	case "first_name_kana":
-		u.FirstNameKana = ""
-	case "family_name":
-		u.FamilyName = ""
-	case "family_name_kana":
-		u.FamilyNameKana = ""
+	case "displayname":
+		u.DisplayName = ""
 	}
 	return u
 }
@@ -73,14 +64,11 @@ func TestUserLookup(t *testing.T) {
 	tx := transaction(t)
 	for _, c := range candidates {
 		sqlmock.ExpectedRows(
-			sqlmock.Columns([]string{"id", "password", "first_name", "first_name_kana", "family_name", "family_name_kana"}),
+			sqlmock.Columns([]string{"id", "password", "display_name"}),
 			sqlmock.ValuesList([]driver.Value{
 				c.User.ID,
 				c.User.Password,
-				c.User.FirstName,
-				c.User.FirstNameKana,
-				c.User.FamilyName,
-				c.User.FamilyNameKana,
+				c.User.DisplayName,
 			}),
 		)
 

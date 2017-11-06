@@ -9,25 +9,23 @@ import (
 )
 
 const (
-	userCreateSQL = `INSERT INTO user(id, password, first_name, first_name_kana, family_name, family_name_kana) VALUES(?, ?, ?, ?, ?, ?)`
+	userCreateSQL = `INSERT INTO user(id, password, display_name) VALUES(?, ?, ?)`
 	userLookupSQL = `SELECT * FROM user WHERE id=?`
-	userUpdateSQL = `UPDATE user SET(id=?, password=?, first_name=?, first_name_kana=?, family_name=?, family_name_kana=?) WHERE id=?`
+	userUpdateSQL = `UPDATE user SET(id=?, password=?, display_name=?) WHERE id=?`
 	userDeleteSQL = `DELETE FROM user WHERE id=?`
 )
 
 // User is a user, such as corporate admin, arbeit
 type User struct {
-	ID             string `json:"id"`
-	Password       string `json:"-"`
-	FirstName      string `json:"first_name"`
-	FirstNameKana  string `json:"first_name_kana"`
-	FamilyName     string `json:"family_name"`
-	FamilyNameKana string `json:"family_name_kana"`
+	ID       string `json:"id"`
+	Password string `json:"-"`
+
+	DisplayName string `json:"display_name"`
 }
 
 // Scan method
 func (u *User) Scan(sc scanner) error {
-	return sc.Scan(&u.ID, &u.Password, &u.FirstName, &u.FirstNameKana, &u.FamilyName, &u.FamilyNameKana)
+	return sc.Scan(&u.ID, &u.Password, &u.DisplayName)
 }
 
 // Create User
@@ -42,7 +40,7 @@ func (u *User) Create(tx *sql.Tx) error {
 		return errors.Wrap(ErrNilPasswd, errmsg)
 	}
 
-	_, err := tx.Exec(userCreateSQL, u.ID, util.Password(u.Password, u.ID), u.FirstName, u.FirstNameKana, u.FamilyName, u.FamilyNameKana)
+	_, err := tx.Exec(userCreateSQL, u.ID, util.Password(u.Password, u.ID), u.DisplayName)
 	if err != nil {
 		return errors.Wrap(err, userCreateSQL)
 	}
@@ -76,7 +74,7 @@ func (u *User) Update(tx *sql.Tx) error {
 		return errors.Wrap(ErrNilPasswd, errmsg)
 	}
 
-	r, err := tx.Exec(userUpdateSQL, u.ID, util.Password(u.Password, u.ID), u.FirstName, u.FirstNameKana, u.FamilyName, u.FamilyNameKana, u.ID)
+	r, err := tx.Exec(userUpdateSQL, u.ID, util.Password(u.Password, u.ID), u.DisplayName, u.ID)
 	if err != nil {
 		return errors.Wrap(err, userUpdateSQL)
 	}
