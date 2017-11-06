@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	userCreateSQL = `INSERT INTO user(id, password, display_name) VALUES(?, ?, ?)`
+	userCreateSQL = `INSERT INTO user(id, password, display_name, email) VALUES(?, ?, ?, ?)`
 	userLookupSQL = `SELECT * FROM user WHERE id=?`
-	userUpdateSQL = `UPDATE user SET(id=?, password=?, display_name=?) WHERE id=?`
+	userUpdateSQL = `UPDATE user SET(id=?, password=?, display_name=?, email=?) WHERE id=?`
 	userDeleteSQL = `DELETE FROM user WHERE id=?`
 )
 
@@ -21,11 +21,12 @@ type User struct {
 	Password string `json:"-"`
 
 	DisplayName string `json:"display_name"`
+	Email       string `json:"email"`
 }
 
 // Scan method
 func (u *User) Scan(sc scanner) error {
-	return sc.Scan(&u.ID, &u.Password, &u.DisplayName)
+	return sc.Scan(&u.ID, &u.Password, &u.DisplayName, &u.Email)
 }
 
 // Create User
@@ -40,7 +41,7 @@ func (u *User) Create(tx *sql.Tx) error {
 		return errors.Wrap(ErrNilPasswd, errmsg)
 	}
 
-	_, err := tx.Exec(userCreateSQL, u.ID, util.Password(u.Password, u.ID), u.DisplayName)
+	_, err := tx.Exec(userCreateSQL, u.ID, util.Password(u.Password, u.ID), u.DisplayName, u.Email)
 	if err != nil {
 		return errors.Wrap(err, userCreateSQL)
 	}
@@ -74,7 +75,7 @@ func (u *User) Update(tx *sql.Tx) error {
 		return errors.Wrap(ErrNilPasswd, errmsg)
 	}
 
-	r, err := tx.Exec(userUpdateSQL, u.ID, util.Password(u.Password, u.ID), u.DisplayName, u.ID)
+	r, err := tx.Exec(userUpdateSQL, u.ID, util.Password(u.Password, u.ID), u.DisplayName, u.Email, u.ID)
 	if err != nil {
 		return errors.Wrap(err, userUpdateSQL)
 	}

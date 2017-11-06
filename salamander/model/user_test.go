@@ -16,6 +16,7 @@ func userTestCase(drop string) *model.User {
 		ID:          "hoge",
 		Password:    "hoge",
 		DisplayName: "hoge",
+		Email:       "hoge",
 	}
 	switch drop {
 	case "id":
@@ -24,6 +25,8 @@ func userTestCase(drop string) *model.User {
 		u.Password = ""
 	case "displayname":
 		u.DisplayName = ""
+	case "email":
+		u.Email = ""
 	}
 	return u
 }
@@ -64,11 +67,12 @@ func TestUserLookup(t *testing.T) {
 	tx := transaction(t)
 	for _, c := range candidates {
 		sqlmock.ExpectedRows(
-			sqlmock.Columns([]string{"id", "password", "display_name"}),
+			sqlmock.Columns([]string{"id", "password", "display_name", "email"}),
 			sqlmock.ValuesList([]driver.Value{
 				c.User.ID,
 				c.User.Password,
 				c.User.DisplayName,
+				c.User.Email,
 			}),
 		)
 
