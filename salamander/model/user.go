@@ -1,11 +1,7 @@
 package model
 
 import (
-	"database/sql"
-
-	"github.com/nasa9084/salamander/salamander/log"
 	"github.com/nasa9084/salamander/salamander/util"
-	"github.com/pkg/errors"
 )
 
 const (
@@ -29,70 +25,30 @@ func (u *User) Scan(sc scanner) error {
 	return sc.Scan(&u.ID, &u.Password, &u.DisplayName, &u.Email)
 }
 
-// Create User
-func (u *User) Create(tx *sql.Tx) error {
-	log.Info.Printf("model.User.Create")
+// GetCreateSQL returns SQL query for creating a new database record.
+func (u *User) GetCreateSQL() string { return userCreateSQL }
 
-	errmsg := `Creating User`
-	switch {
-	case u.ID == "":
-		return errors.Wrap(ErrNilID, errmsg)
-	case u.Password == "":
-		return errors.Wrap(ErrNilPasswd, errmsg)
-	}
-
-	_, err := tx.Exec(userCreateSQL, u.ID, util.Password(u.Password, u.ID), u.DisplayName, u.Email)
-	if err != nil {
-		return errors.Wrap(err, userCreateSQL)
-	}
-	return nil
+// GetCreateValues returns values list for placeholders in query returned GetCreateSQL().
+func (u *User) GetCreateValues() []interface{} {
+	return []interface{}{u.ID, util.Password(u.Password, u.ID), u.DisplayName, u.Email}
 }
 
-// Lookup User by ID
-func (u *User) Lookup(tx *sql.Tx) error {
-	log.Info.Printf("model.User.Lookup")
+// GetReadSQL returns SQL query for read from database record.
+func (u *User) GetReadSQL() string { return userLookupSQL }
 
-	if u.ID == "" {
-		return errors.Wrap(ErrNilID, `Looking up User`)
-	}
+// GetReadValues returns values list for placeholders in query returned GetReadSQL().
+func (u *User) GetReadValues() []interface{} { return []interface{}{u.ID} }
 
-	row := tx.QueryRow(userLookupSQL, u.ID)
-	if err := u.Scan(row); err != nil {
-		return errors.Wrap(err, `Scanning User`)
-	}
-	return nil
+// GetUpdateSQL returns SQL query for update a database record.
+func (u *User) GetUpdateSQL() string { return userUpdateSQL }
+
+// GetUpdateValues returns values list for placeholders in query returned GetUpdateSQL().
+func (u *User) GetUpdateValues() []interface{} {
+	return []interface{}{u.ID, util.Password(u.Password, u.ID), u.DisplayName, u.Email, u.ID}
 }
 
-// Update User
-func (u *User) Update(tx *sql.Tx) error {
-	log.Info.Printf("model.User.Update")
+// GetDeleteSQL returns SQL query for delete a database record.
+func (u *User) GetDeleteSQL() string { return userDeleteSQL }
 
-	errmsg := `Updating User`
-	switch {
-	case u.ID == "":
-		return errors.Wrap(ErrNilID, errmsg)
-	case u.Password == "":
-		return errors.Wrap(ErrNilPasswd, errmsg)
-	}
-
-	r, err := tx.Exec(userUpdateSQL, u.ID, util.Password(u.Password, u.ID), u.DisplayName, u.Email, u.ID)
-	if err != nil {
-		return errors.Wrap(err, userUpdateSQL)
-	}
-	return checkResult(r)
-}
-
-// Delete User
-func (u *User) Delete(tx *sql.Tx) error {
-	log.Info.Printf("model.User.Delete")
-
-	if u.ID == "" {
-		return errors.Wrap(ErrNilID, `Deleting User`)
-	}
-
-	r, err := tx.Exec(userDeleteSQL, u.ID)
-	if err != nil {
-		return errors.Wrap(err, userDeleteSQL)
-	}
-	return checkResult(r)
-}
+// GetDeleteValues returns values list for placeholders in query returned GetDeleteSQL().
+func (u *User) GetDeleteValues() []interface{} { return []interface{}{u.ID} }
