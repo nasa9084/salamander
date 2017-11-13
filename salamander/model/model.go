@@ -52,6 +52,9 @@ func queryRow(tx *sql.Tx, q string, v []interface{}) (*sql.Row, error) {
 
 // Create a new database record from model.
 func Create(tx *sql.Tx, m CreateModel) error {
+	if m == nil {
+		return ErrNilModel
+	}
 	q := m.GetCreateSQL()
 	v := m.GetCreateValues()
 	return exec(tx, q, v)
