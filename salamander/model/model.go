@@ -62,6 +62,9 @@ func Create(tx *sql.Tx, m CreateModel) error {
 
 // Read from database.
 func Read(tx *sql.Tx, m ReadModel) error {
+	if m == nil {
+		return ErrNilModel
+	}
 	q := m.GetReadSQL()
 	v := m.GetReadValues()
 	row, err := queryRow(tx, q, v)
@@ -73,6 +76,9 @@ func Read(tx *sql.Tx, m ReadModel) error {
 
 // Update a database record.
 func Update(tx *sql.Tx, m UpdateModel) error {
+	if m == nil {
+		return ErrNilModel
+	}
 	q := m.GetUpdateSQL()
 	v := m.GetUpdateValues()
 	return exec(tx, q, v)
@@ -80,6 +86,9 @@ func Update(tx *sql.Tx, m UpdateModel) error {
 
 // Delete a database record.
 func Delete(tx *sql.Tx, m DeleteModel) error {
+	if m == nil {
+		return ErrNilModel
+	}
 	q := m.GetDeleteSQL()
 	v := m.GetDeleteValues()
 	return exec(tx, q, v)

@@ -34,6 +34,17 @@ type mock struct{}
 
 func (m mock) GetCreateSQL() string           { return "" }
 func (m mock) GetCreateValues() []interface{} { return []interface{}{} }
+func (m mock) GetReadSQL() string             { return "" }
+func (m mock) GetReadValues() []interface{}   { return []interface{}{} }
+func (m mock) Scan(sc interface {
+	Scan(...interface{}) error
+}) error {
+	return nil
+}
+func (m mock) GetUpdateSQL() string           { return "" }
+func (m mock) GetUpdateValues() []interface{} { return []interface{}{} }
+func (m mock) GetDeleteSQL() string           { return "" }
+func (m mock) GetDeleteValues() []interface{} { return []interface{}{} }
 
 func TestCreate(t *testing.T) {
 	candidates := []struct {
@@ -61,10 +72,75 @@ func TestCreate(t *testing.T) {
 }
 
 func TestRead(t *testing.T) {
+	candidates := []struct {
+		Label        string
+		Model        model.ReadModel
+		ExpectedRows sqlmock.RowsOpts
+		Expected     error
+	}{
+		{"valid", mock{}, sqlmock.ValuesList(), nil},
+		{"nil value", nil, sqlmock.ValuesList(), model.ErrNilModel},
+	}
+	for _, c := range candidates {
+		t.Log(c.Label)
+		sqlmock.ExpectedRows(c.ExpectedRows)
+		tx, err := mDB.Begin()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err = model.Read(tx, c.Model); err != c.Expected {
+			t.Errorf("error should be %s, but actual %s", c.Expected, err)
+			return
+		}
+	}
 }
 
 func TestUpdate(t *testing.T) {
+	candidates := []struct {
+		Label          string
+		Model          model.UpdateModel
+		ExpectedResult sqlmock.ResultOpts
+		Expected       error
+	}{
+		{"empty result", mock{}, sqlmock.RowsAffected(0), model.ErrNoRowsAffected},
+		{"valid", mock{}, sqlmock.RowsAffected(1), nil},
+		{"nil value", nil, sqlmock.RowsAffected(1), model.ErrNilModel},
+	}
+	for _, c := range candidates {
+		t.Log(c.Label)
+		sqlmock.ExpectedResult(c.ExpectedResult)
+		tx, err := mDB.Begin()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err = model.Update(tx, c.Model); err != c.Expected {
+			t.Errorf("error should be %s, but actual %s", c.Expected, err)
+			return
+		}
+	}
 }
 
 func TestDelete(t *testing.T) {
+	candidates := []struct {
+		Label          string
+		Model          model.DeleteModel
+		ExpectedResult sqlmock.ResultOpts
+		Expected       error
+	}{
+		{"empty result", mock{}, sqlmock.RowsAffected(0), model.ErrNoRowsAffected},
+		{"valid", mock{}, sqlmock.RowsAffected(1), nil},
+		{"nil value", nil, sqlmock.RowsAffected(1), model.ErrNilModel},
+	}
+	for _, c := range candidates {
+		t.Log(c.Label)
+		sqlmock.ExpectedResult(c.ExpectedResult)
+		tx, err := mDB.Begin()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err = model.Delete(tx, c.Model); err != c.Expected {
+			t.Errorf("error should be %s, but actual %s", c.Expected, err)
+			return
+		}
+	}
 }

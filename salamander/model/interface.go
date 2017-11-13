@@ -22,7 +22,9 @@ type CreateModel interface {
 type ReadModel interface {
 	GetReadSQL() string
 	GetReadValues() []interface{}
-	Scan(scanner) error
+	Scan(interface {
+		Scan(...interface{}) error
+	}) error
 }
 
 // UpdateModel can update a database record.
