@@ -1,14 +1,13 @@
 package model
 
-import "errors"
+// Error is package specific error type
+type Error string
 
-var (
-	// ErrNoRows returned when updating/deleting but the target is nil
-	ErrNoRowsAffected = errors.New(`no rows affected`)
-
-	// ErrNilID is returned when the object's ID is nil
-	ErrNilID = errors.New(`object's ID is nil`)
-
-	// ErrNilPasswd is returned when creating or updating but the object's Password is nil
-	ErrNilPasswd = errors.New(`object's Password is nil`)
+const (
+	// ErrNoRowsAffected is returned if exec query affect to no rows.
+	ErrNoRowsAffected Error = "no rows affected"
+	// ErrNilValue is returned if values validation got error.
+	ErrNilValue Error = "one or some value is nil"
 )
+
+func (err Error) Error() string { return string(err) }
