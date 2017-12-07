@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/nasa9084/salamander/salamander/context"
+	"github.com/nasa9084/salamander/salamander/middleware"
 )
 
 const (
@@ -28,11 +28,11 @@ const (
 type server struct {
 	*mux.Router
 	listen string
-	db     *sql.DB
+	mwset  middleware.Set
 }
 
 // Server represents a instance of Salamander server
-type Server interface{
+type Server interface {
 	Run() error
 }
 
@@ -46,18 +46,14 @@ func ListenAddr(l string) ServerOption {
 	}
 }
 
-// Database configure Database connection
-func Database(db *sql.DB) ServerOption {
-	return func(s *server) {
-		s.db = db
-	}
-}
-
 // NewServer returns a new Salamander server
-func NewServer(opts ...ServerOption) Server {
+func NewServer(db *sql.DB, opts ...ServerOption) Server {
 	s := server{
 		Router: mux.NewRouter(),
 		listen: defaultListenAddr,
+		mwset: middleware.Set{
+			middleware.Transaction(db),
+		},
 	}
 	s.bindRoutes()
 	for _, opt := range opts {
@@ -68,14 +64,7 @@ func NewServer(opts ...ServerOption) Server {
 
 // Run server
 func (s *server) Run() error {
-	if s.db == nil {
-		return ErrDBNotGiven
-	}
-	tx, err := s.db.Begin()
-	if err != nil {
-		return err
-	}
-	return http.ListenAndServe(s.listen, withTx(tx, s.Router))
+	return http.ListenAndServe(s.listen, s.mwset.Apply(s.Router))
 }
 
 // binding url path to http handler
@@ -114,11 +103,4 @@ func newJSONErr(err error, msg string) jsonErr {
 		je.Error = err.Error()
 	}
 	return je
-}
-
-func withTx(tx *sql.Tx, h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		r.WithContext(context.WithTx(r.Context(), tx))
-		h.ServeHTTP(w, r)
-	})
 }
