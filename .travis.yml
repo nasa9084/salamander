@@ -1,29 +1,14 @@
 language: go
-sudo: required
 
 go:
   - 1.9.x
 
-addons:
-  apt:
-    sources:
-      - sourceline: 'ppa:masterminds/glide'
-    packages:
-      - glide
-
-services:
-  - docker
-
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y -o Dpkg::Options::="--force-confnew" docker-ce
-  - docker --version
-  - bundle install
-  - bundle exec rspec
+  - go get github.com/golang/dep/...
   - cd salamander
 
 install:
-  - glide install
+  - $GOPATH/bin/dep ensure
 
 script:
   - go vet
