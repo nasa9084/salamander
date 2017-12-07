@@ -1,17 +1,17 @@
 # build container
 FROM golang:1.9 AS build
 
-ENV GHQ_ROOT=/go/src
 ENV CGO_ENABLED=0
 
-RUN go get github.com/motemen/ghq && \
-    ghq get nasa9084/salamander
-
-WORKDIR /go/src/github.com/nasa9084
-RUN curl https://glide.sh/get | sh
+RUN go get -u github.com/golang/dep/... &&\
+    mkdir -p /go/src/github.com/nasa9084/salamander/salamander
 
 WORKDIR /go/src/github.com/nasa9084/salamander/salamander
-RUN glide install && \
+
+COPY salamander/ ./
+
+WORKDIR /go/src/github.com/nasa9084/salamander/salamander
+RUN dep ensure && \
     go build -o /tmp/salamander cmd/salamander/main.go && \
     chmod +x /tmp/salamander
 
