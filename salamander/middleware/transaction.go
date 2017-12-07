@@ -16,6 +16,7 @@ func Transaction(db *sql.DB) Middleware {
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
+			defer tx.Rollback()
 			r = r.WithContext(context.WithTx(r.Context(), tx))
 			h.ServeHTTP(w, r)
 		})
