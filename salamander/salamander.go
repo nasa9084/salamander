@@ -46,6 +46,15 @@ func ListenAddr(l string) ServerOption {
 	}
 }
 
+// Middlewares add middlewares to Server.
+func Middlewares(mws ...middleware.Middleware) ServerOption {
+	return func(s *server) {
+		for _, mw := range mws {
+			s.mwset = append(s.mwset, mw)
+		}
+	}
+}
+
 // NewServer returns a new Salamander server
 func NewServer(db *sql.DB, opts ...ServerOption) Server {
 	s := server{
@@ -85,7 +94,7 @@ func jsonResponse(w http.ResponseWriter, st int, v interface{}) {
 
 	buf := bytes.Buffer{}
 	if err := json.NewEncoder(&buf).Encode(v); err != nil {
-		jsonResponse(w, http.StatusInternalServerError, newJSONErr(err, `encoding json`))
+		jsonError(w, http.StatusInternalServerError, err, `encoding json`)
 		return
 	}
 	buf.WriteTo(w)
@@ -96,12 +105,12 @@ type jsonErr struct {
 	Message string `json:"message,omitempty"`
 }
 
-func newJSONErr(err error, msg string) jsonErr {
+func jsonError(w http.ResponseWriter, st int, err error, msg string) {
 	je := jsonErr{
 		Message: msg,
 	}
 	if err != nil {
 		je.Error = err.Error()
 	}
-	return je
+	jsonResponse(w, st, je)
 }
