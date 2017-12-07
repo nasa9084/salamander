@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"bytes"
-	"io"
 	"net/http"
 
 	"github.com/nasa9084/salamander/salamander/log"
@@ -30,13 +29,11 @@ func (w *loggingResponseWriter) WriteHeader(st int) {
 	w.w.WriteHeader(st)
 }
 
-// LogMiddleware logs all
-func LogMiddleware(out io.Writer) Middleware {
-	return func(h http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			lw := &loggingResponseWriter{w: w}
-			h.ServeHTTP(lw, r)
-			log.Info.Printf(logFormat, r.Method, r.URL.Path, lw.st, http.StatusText(lw.st))
-		})
-	}
+// Logger logs all
+var Logger Middleware = func(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		lw := &loggingResponseWriter{w: w}
+		h.ServeHTTP(lw, r)
+		log.Info.Printf(logFormat, r.Method, r.URL.Path, lw.st, http.StatusText(lw.st))
+	})
 }
