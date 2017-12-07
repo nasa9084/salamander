@@ -7,21 +7,31 @@ import (
 )
 
 var (
-	Canceled         = context.Canceled
+	// Canceled alias
+	Canceled = context.Canceled
+	// DeadlineExceeded alias
 	DeadlineExceeded = context.DeadlineExceeded
 )
 
+// Context alias
 type Context = context.Context
 
+// CancelFunc alias
 type CancelFunc = context.CancelFunc
 
 var (
-	Background   = context.Background
-	TODO         = context.TODO
-	WithCancel   = context.WithCancel
+	// Background alias
+	Background = context.Background
+	// TODO alias
+	TODO = context.TODO
+	// WithCancel alias
+	WithCancel = context.WithCancel
+	// WithDeadline alias
 	WithDeadline = context.WithDeadline
-	WithTimeout  = context.WithTimeout
-	WithValue    = context.WithValue
+	// WithTimeout alias
+	WithTimeout = context.WithTimeout
+	// WithValue alias
+	WithValue = context.WithValue
 )
 
 type withTxContext struct {
@@ -29,6 +39,7 @@ type withTxContext struct {
 	tx *sql.Tx
 }
 
+// Tx returns transaction associated with the context
 func (txctx *withTxContext) Tx() *sql.Tx {
 	return txctx.tx
 }
@@ -37,7 +48,7 @@ func (txctx *withTxContext) Tx() *sql.Tx {
 func WithTx(parent Context, tx *sql.Tx) Context {
 	return &withTxContext{
 		Context: parent,
-		tx: tx,
+		tx:      tx,
 	}
 }
 
