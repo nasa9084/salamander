@@ -75,7 +75,8 @@ func (s *server) bindRoutes() {
 }
 
 func nilHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("hello"))
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(""))
 }
 
 func jsonResponse(w http.ResponseWriter, st int, v interface{}) {
