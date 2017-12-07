@@ -40,8 +40,8 @@ func exec() int {
 		panic(err)
 	}
 	s := salamander.NewServer(
+		db,
 		salamander.ListenAddr(opts.Listen),
-		salamander.Database(db),
 	)
 	log.Printf("server listening: %s", opts.Listen)
 	if err := s.Run(); err != nil {
