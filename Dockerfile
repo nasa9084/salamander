@@ -16,7 +16,7 @@ RUN dep ensure && \
     chmod +x /tmp/salamander
 
 # application container
-FROM busybox
+FROM scratch
 LABEL maintainer="nasa9084"
 COPY --from=build /tmp/salamander salamander
 CMD ["./salamander"]
