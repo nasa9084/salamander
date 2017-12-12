@@ -14,12 +14,14 @@ import (
 
 type options struct {
 	Listen string `short:"l" long:"listen" env:"SALAMANDER_LISTEN" default:":8080" description:"listening address"`
-	MySQL  struct {
-		Addr     string `long:"mysql-addr" env:"MYSQL_ADDR" default:"localhost:3306" description:"hostname or IP address and port of MySQL"`
-		DB       string `long:"mysql-db" env:"MYSQL_DB" default:"salamander" description:"database name for this application"`
-		User     string `long:"mysql-user" env:"MYSQL_USER" default:"root" description:"MySQL username"`
-		Password string `long:"mysql-password" env:"MYSQL_PASSWORD" default:"password" description:"MySQL password"`
-	}
+	MySQL  mysqlOptions
+}
+
+type mysqlOptions struct {
+	Addr     string `long:"mysql-addr" env:"MYSQL_ADDR" default:"localhost:3306" description:"hostname or IP address and port of MySQL"`
+	DB       string `long:"mysql-db" env:"MYSQL_DB" default:"salamander" description:"database name for this application"`
+	User     string `long:"mysql-user" env:"MYSQL_USER" default:"root" description:"MySQL username"`
+	Password string `long:"mysql-password" env:"MYSQL_PASSWORD" default:"password" description:"MySQL password"`
 }
 
 func main() { os.Exit(exec()) }
