@@ -34,6 +34,10 @@ var Logger Middleware = func(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		lw := &loggingResponseWriter{w: w}
 		h.ServeHTTP(lw, r)
-		log.Info.Printf(logFormat, r.Method, r.URL.Path, lw.st, http.StatusText(lw.st))
+		path := r.URL.Path
+		if path == "" {
+			path = "/"
+		}
+		log.Info.Printf(logFormat, r.Method, path, lw.st, http.StatusText(lw.st))
 	})
 }
