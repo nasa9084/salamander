@@ -27,16 +27,16 @@ func columns(t reflect.Type) []string {
 			continue
 		}
 
-		var adds []string
-		if f.Type.Kind() == reflect.Struct {
-			adds = columns(f.Type)
-		} else {
-			adds = []string{fieldName(f)}
-		}
-
-		cols = append(cols, adds...)
+		cols = append(cols, columnsFromField(f)...)
 	}
 	return cols
+}
+
+func columnsFromField(f reflect.StructField) []string {
+	if f.Type.Kind() == reflect.Struct {
+		return columns(f.Type)
+	}
+	return []string{fieldName(f)}
 }
 
 func isExported(f reflect.StructField) bool {
