@@ -27,9 +27,9 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/nasa9084/go-sql-mock"
+  name = "github.com/nasa9084/go-strlib"
   packages = ["."]
-  revision = "982ea1325821fe381ea747efa4bf16dd5e57b6a9"
+  revision = "bd071e78b3b91d9cb237315afe64f5deddca479b"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -40,6 +40,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8b65d04cae122bd373622edbf4f2943784df9240078f831d43038c96017b8543"
+  inputs-digest = "b7c362af360cb5b6f234c6fcaea598db2a864e5374ca36dee1e77a19d5dc9539"
   solver-name = "gps-cdcl"
   solver-version = 1
