@@ -30,7 +30,7 @@ func (w *loggingResponseWriter) WriteHeader(st int) {
 }
 
 // Logger logs all
-var Logger Middleware = func(h http.Handler) http.Handler {
+func Logger(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		lw := &loggingResponseWriter{w: w}
 		h.ServeHTTP(lw, r)
