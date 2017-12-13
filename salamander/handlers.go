@@ -17,7 +17,7 @@ func jsonResponse(w http.ResponseWriter, st int, v interface{}) {
 
 	buf := bytes.Buffer{}
 	if err := json.NewEncoder(&buf).Encode(v); err != nil {
-		jsonError(w, http.StatusInternalServerError, err, `encoding json`)
+		jsonResponse(w, http.StatusInternalServerError, newJSONErr(err, `encoding json`))
 		return
 	}
 	buf.WriteTo(w)
@@ -28,12 +28,12 @@ type jsonErr struct {
 	Message string `json:"message,omitempty"`
 }
 
-func jsonError(w http.ResponseWriter, st int, err error, msg string) {
+func newJSONErr(err error, msg string) jsonErr {
 	je := jsonErr{
 		Message: msg,
 	}
 	if err != nil {
 		je.Error = err.Error()
 	}
-	jsonResponse(w, st, je)
+	return je
 }
