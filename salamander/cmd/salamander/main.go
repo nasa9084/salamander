@@ -38,12 +38,7 @@ func exec() int {
 		salamander.ListenAddr(opts.Listen),
 		middlewareOption,
 	)
-	log.Info.Printf("server listening: %s", opts.Listen)
-	if err := s.Run(); err != nil {
-		log.Error.Printf("%s", err)
-		return 1
-	}
-	return 0
+	return run(s)
 }
 
 func prepare() (*options, *sql.DB, error) {
@@ -56,6 +51,15 @@ func prepare() (*options, *sql.DB, error) {
 		return nil, nil, err
 	}
 	return &opts, db, nil
+}
+
+func run(s salamander.Server) int {
+	log.Info.Printf("server listening: %s", s.Listen())
+	if err := s.Run(); err != nil {
+		log.Error.Printf("%s", err)
+		return 1
+	}
+	return 0
 }
 
 func openMySQL(opts options) (*sql.DB, error) {

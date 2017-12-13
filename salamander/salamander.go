@@ -32,6 +32,7 @@ type server struct {
 // Server represents a instance of Salamander server
 type Server interface {
 	Run() error
+	Listen() string
 }
 
 // NewServer returns a new Salamander server
@@ -53,6 +54,10 @@ func NewServer(db *sql.DB, opts ...ServerOption) Server {
 // Run server
 func (s *server) Run() error {
 	return http.ListenAndServe(s.listen, s.mwset.Apply(s.Router))
+}
+
+func (s *server) Listen() string {
+	return s.listen
 }
 
 // binding url path to http handler
