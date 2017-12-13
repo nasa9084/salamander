@@ -30,7 +30,13 @@ func (w *loggingResponseWriter) WriteHeader(st int) {
 }
 
 // Logger logs all
-func Logger(h http.Handler) http.Handler {
+func Logger() Middleware {
+	return &loggerMW{}
+}
+
+type loggerMW struct{}
+
+func (l *loggerMW) Apply(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		lw := &loggingResponseWriter{w: w}
 		h.ServeHTTP(lw, r)

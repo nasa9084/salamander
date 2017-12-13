@@ -37,7 +37,7 @@ func exec() int {
 		log.Error.Print(err)
 		return 1
 	}
-	middlewareOption := salamander.Middlewares(middleware.Logger)
+	middlewareOption := salamander.Middlewares(middleware.Logger())
 	s := salamander.NewServer(
 		db,
 		salamander.ListenAddr(opts.Listen),

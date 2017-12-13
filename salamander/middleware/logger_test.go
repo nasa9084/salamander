@@ -33,7 +33,7 @@ func TestLogger(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		h := middleware.Logger(http.HandlerFunc(nilHandler))
+		h := middleware.Logger().Apply(http.HandlerFunc(nilHandler))
 		h.ServeHTTP(w, r)
 		if !strings.HasSuffix(strings.TrimSpace(stdout.String()), c.expected) {
 			t.Errorf("%s != %s", strings.TrimSpace(stdout.String()), c.expected)
