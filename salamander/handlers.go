@@ -6,6 +6,10 @@ import (
 	"net/http"
 )
 
+/*
+ * http handling utils.
+ */
+
 func nilHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(""))
