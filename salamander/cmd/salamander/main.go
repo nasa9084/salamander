@@ -27,14 +27,9 @@ type mysqlOptions struct {
 func main() { os.Exit(exec()) }
 
 func exec() int {
-	var opts options
-	if _, err := flags.Parse(&opts); err != nil {
-		log.Error.Printf("%s", err)
-		return 1
-	}
-	db, err := openMySQL(opts)
+	opts, db, err := prepare()
 	if err != nil {
-		log.Error.Print(err)
+		log.Error.Printf("%s", err)
 		return 1
 	}
 	middlewareOption := salamander.Middlewares(middleware.Logger())
@@ -49,6 +44,18 @@ func exec() int {
 		return 1
 	}
 	return 0
+}
+
+func prepare() (*options, *sql.DB, error) {
+	var opts options
+	if _, err := flags.Parse(&opts); err != nil {
+		return nil, nil, err
+	}
+	db, err := openMySQL(opts)
+	if err != nil {
+		return nil, nil, err
+	}
+	return &opts, db, nil
 }
 
 func openMySQL(opts options) (*sql.DB, error) {
