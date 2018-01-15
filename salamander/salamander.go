@@ -12,16 +12,6 @@ const (
 	defaultListenAddr = ":8080"
 )
 
-// Error is local error type
-type Error string
-
-func (e Error) Error() string { return string(e) }
-
-const (
-	// ErrDBNotGiven is returned when server is ran without database
-	ErrDBNotGiven Error = `database option is not given`
-)
-
 // server represents a instance of Salamander server
 type server struct {
 	*mux.Router
