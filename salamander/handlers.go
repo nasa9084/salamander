@@ -41,3 +41,7 @@ func newJSONErr(err error, msg string) jsonErr {
 	}
 	return je
 }
+
+/*
+ * http handlers
+ */
